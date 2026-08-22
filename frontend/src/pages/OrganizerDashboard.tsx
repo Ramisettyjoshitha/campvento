@@ -35,6 +35,7 @@ import {
   Inbox,
   XCircle,
   FileText,
+  BarChart3,
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -518,6 +519,67 @@ export const OrganizerDashboard: React.FC = () => {
               ${commitmentSummary.totalValue.toLocaleString()}
             </div>
             <p className="text-[11px] text-slate-500 mt-1">Agreed amount sum</p>
+          </div>
+        </div>
+      </div>
+
+      {/* STEP 9: IMPACT & SPONSORSHIP ANALYTICS SECTION */}
+      <div className="bg-gradient-to-r from-slate-900 via-slate-900/95 to-slate-950 border border-emerald-500/30 rounded-2xl p-6 shadow-xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-800">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5">
+                <BarChart3 className="w-3.5 h-3.5" />
+                PORTFOLIO IMPACT
+              </span>
+              <span className="text-xs text-slate-400">Step 9</span>
+            </div>
+            <h2 className="text-lg font-bold text-white tracking-tight">
+              Impact & Sponsorship Analytics
+            </h2>
+            <p className="text-xs text-slate-400 mt-1">
+              Explore multi-stage sponsorship conversion pipelines, agreement metrics, and event performance.
+            </p>
+          </div>
+
+          <Link
+            to="/organizer/analytics"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-colors shadow-lg shadow-emerald-600/20"
+          >
+            <BarChart3 className="w-4 h-4" />
+            <span>View Analytics</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs font-medium">
+              <span>Active Commitments</span>
+              <Clock className="w-3.5 h-3.5 text-emerald-400" />
+            </div>
+            <div className="text-2xl font-bold text-emerald-400">{commitmentSummary.active}</div>
+            <p className="text-[11px] text-slate-500 mt-1">Confirmed in fulfillment</p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs font-medium">
+              <span>Accepted Requests</span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
+            </div>
+            <div className="text-2xl font-bold text-blue-400">{requestSummary.accepted}</div>
+            <p className="text-[11px] text-slate-500 mt-1">Mutual agreements reached</p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs font-medium">
+              <span>Committed Sponsorship Value</span>
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            </div>
+            <div className="text-2xl font-bold text-emerald-400">
+              ${commitmentSummary.totalValue.toLocaleString()}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Across all confirmed commitments</p>
           </div>
         </div>
       </div>

@@ -27,6 +27,9 @@ import { CreateCommitmentPage } from './pages/CreateCommitmentPage';
 import { OrganizerCommitmentsPage } from './pages/OrganizerCommitmentsPage';
 import { SponsorCommitmentsPage } from './pages/SponsorCommitmentsPage';
 import { CommitmentDetailsPage } from './pages/CommitmentDetailsPage';
+import { OrganizerAnalyticsPage } from './pages/OrganizerAnalyticsPage';
+import { SponsorAnalyticsPage } from './pages/SponsorAnalyticsPage';
+import { EventAnalyticsPage } from './pages/EventAnalyticsPage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
 
@@ -216,6 +219,32 @@ export const App: React.FC = () => {
               }
             />
 
+            {/* Organizer Analytics Routes (Step 9) */}
+            <Route
+              path="/organizer/analytics"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <OrganizerAnalyticsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/organizer/analytics"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <OrganizerAnalyticsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/organizer/events/:eventId/analytics"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <EventAnalyticsPage />
+                </ProtectedRoute>
+              }
+            />
+
             {/* Sponsor Role-Protected Routes (Step 5, Step 6, Step 7) */}
             <Route
               path="/dashboard/sponsor"
@@ -324,6 +353,24 @@ export const App: React.FC = () => {
               element={
                 <ProtectedRoute allowedRoles={['SPONSOR']}>
                   <CommitmentDetailsPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Sponsor Analytics Routes (Step 9) */}
+            <Route
+              path="/sponsor/analytics"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <SponsorAnalyticsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/sponsor/analytics"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <SponsorAnalyticsPage />
                 </ProtectedRoute>
               }
             />

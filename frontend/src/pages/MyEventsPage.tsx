@@ -18,6 +18,7 @@ import {
   Loader2,
   Layers,
   Sparkles,
+  BarChart3,
 } from 'lucide-react';
 
 export const MyEventsPage: React.FC = () => {
@@ -297,6 +298,15 @@ export const MyEventsPage: React.FC = () => {
                 >
                   <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                   <span>View Sponsor Compatibility</span>
+                </Link>
+
+                {/* Event Analytics Button (Step 9) */}
+                <Link
+                  to={`/organizer/events/${event.id}/analytics`}
+                  className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-300 hover:text-emerald-200 transition-colors border border-emerald-500/20"
+                >
+                  <BarChart3 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Event Sponsorship Analytics</span>
                 </Link>
               </div>
             </div>

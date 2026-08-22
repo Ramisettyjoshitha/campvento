@@ -15,6 +15,7 @@ import {
   Send,
   Inbox,
   FileText,
+  BarChart3,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -131,6 +132,18 @@ export const Navbar: React.FC = () => {
                     <FileText className="w-3.5 h-3.5" />
                     <span>Commitments</span>
                   </Link>
+
+                  <Link
+                    to="/sponsor/analytics"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/sponsor/analytics')
+                        ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <BarChart3 className="w-3.5 h-3.5" />
+                    <span>Analytics</span>
+                  </Link>
                 </>
               )}
 
@@ -194,6 +207,18 @@ export const Navbar: React.FC = () => {
                   >
                     <FileText className="w-3.5 h-3.5" />
                     <span>Commitments</span>
+                  </Link>
+
+                  <Link
+                    to="/organizer/analytics"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/organizer/analytics')
+                        ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <BarChart3 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Analytics</span>
                   </Link>
                 </>
               )}
