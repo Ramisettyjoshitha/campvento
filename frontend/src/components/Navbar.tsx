@@ -12,6 +12,8 @@ import {
   Building2,
   GraduationCap,
   Sparkles,
+  Send,
+  Inbox,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -104,6 +106,18 @@ export const Navbar: React.FC = () => {
                     <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                     <span>AI Matches</span>
                   </Link>
+
+                  <Link
+                    to="/sponsor/requests"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/sponsor/requests')
+                        ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <Send className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>My Requests</span>
+                  </Link>
                 </>
               )}
 
@@ -143,6 +157,18 @@ export const Navbar: React.FC = () => {
                   >
                     <Calendar className="w-3.5 h-3.5" />
                     <span>Events</span>
+                  </Link>
+
+                  <Link
+                    to="/organizer/requests"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/organizer/requests')
+                        ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <Inbox className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Requests</span>
                   </Link>
                 </>
               )}

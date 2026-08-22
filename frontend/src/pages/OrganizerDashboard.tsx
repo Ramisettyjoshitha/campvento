@@ -7,6 +7,11 @@ import type { EventItem } from '../lib/events';
 import { getMyPackages } from '../lib/sponsorshipPackages';
 import type { SponsorshipPackage } from '../lib/sponsorshipPackages';
 import {
+  getOrganizerRequests,
+  calculateRequestSummary,
+} from '../lib/sponsorshipRequests';
+import type { RequestSummaryStats } from '../lib/sponsorshipRequests';
+import {
   GraduationCap,
   ShieldCheck,
   LogOut,
@@ -22,6 +27,8 @@ import {
   ExternalLink,
   Package,
   Sparkles,
+  Inbox,
+  XCircle,
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -33,6 +40,13 @@ export const OrganizerDashboard: React.FC = () => {
   const [loadingEvents, setLoadingEvents] = useState<boolean>(true);
   const [packages, setPackages] = useState<SponsorshipPackage[]>([]);
   const [loadingPackages, setLoadingPackages] = useState<boolean>(true);
+  const [requestSummary, setRequestSummary] = useState<RequestSummaryStats>({
+    total: 0,
+    pending: 0,
+    accepted: 0,
+    rejected: 0,
+    cancelled: 0,
+  });
 
   useEffect(() => {
     const loadData = async () => {
@@ -59,6 +73,12 @@ export const OrganizerDashboard: React.FC = () => {
         setPackages(pkgList);
       }
       setLoadingPackages(false);
+
+      // Load incoming requests (Step 7)
+      const reqRes = await getOrganizerRequests();
+      if (reqRes.data) {
+        setRequestSummary(calculateRequestSummary(reqRes.data));
+      }
     };
 
     loadData();
@@ -341,6 +361,75 @@ export const OrganizerDashboard: React.FC = () => {
             <p className="text-slate-400 leading-relaxed text-[11px]">
               Sponsor private contact profiles remain strictly protected under Row Level Security. Direct sponsor proposals and consented discovery will unlock in subsequent platform stages.
             </p>
+          </div>
+        </div>
+      </div>
+
+      {/* STEP 7: INCOMING SPONSORSHIP REQUESTS SECTION */}
+      <div className="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-950 border border-emerald-500/30 rounded-2xl p-6 shadow-xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-800">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5">
+                <Inbox className="w-3.5 h-3.5" />
+                SPONSORSHIP INQUIRIES
+              </span>
+              <span className="text-xs text-slate-400">Step 7</span>
+            </div>
+            <h2 className="text-lg font-bold text-white tracking-tight">
+              Incoming Sponsorship Requests
+            </h2>
+            <p className="text-xs text-slate-400 mt-1">
+              Review and respond to expressions of interest submitted by verified sponsors.
+            </p>
+          </div>
+
+          <Link
+            to="/organizer/requests"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-colors shadow-lg shadow-emerald-600/20"
+          >
+            <Inbox className="w-4 h-4" />
+            <span>Review Requests ({requestSummary.pending} pending)</span>
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs font-medium">
+              <span>Total Requests</span>
+              <Inbox className="w-3.5 h-3.5 text-blue-400" />
+            </div>
+            <div className="text-2xl font-bold text-white">{requestSummary.total}</div>
+            <p className="text-[11px] text-slate-500 mt-1">All received inquiries</p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs font-medium">
+              <span>Needs Action</span>
+              <Clock className="w-3.5 h-3.5 text-amber-400" />
+            </div>
+            <div className="text-2xl font-bold text-amber-400">{requestSummary.pending}</div>
+            <p className="text-[11px] text-slate-500 mt-1">Awaiting decision</p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs font-medium">
+              <span>Accepted</span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+            </div>
+            <div className="text-2xl font-bold text-emerald-400">{requestSummary.accepted}</div>
+            <p className="text-[11px] text-slate-500 mt-1">Active partnerships</p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs font-medium">
+              <span>Rejected / Closed</span>
+              <XCircle className="w-3.5 h-3.5 text-rose-400" />
+            </div>
+            <div className="text-2xl font-bold text-rose-400">
+              {requestSummary.rejected + requestSummary.cancelled}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Closed proposals</p>
           </div>
         </div>
       </div>

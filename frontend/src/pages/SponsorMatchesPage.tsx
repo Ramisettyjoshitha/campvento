@@ -24,6 +24,7 @@ import {
   Zap,
   Loader2,
   Building2,
+  Send,
 } from 'lucide-react';
 
 export const SponsorMatchesPage: React.FC = () => {
@@ -607,6 +608,27 @@ export const SponsorMatchesPage: React.FC = () => {
                       )}
                     </div>
                   )}
+
+                  {/* Step 7 Express Interest Action Row */}
+                  <div className="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between gap-4">
+                    <span className="text-[11px] text-slate-400">
+                      Compatible sponsorship tier &bull; Direct submission to organizer
+                    </span>
+
+                    <Link
+                      to={`/sponsor/request/${match.package.id}`}
+                      state={{
+                        matchScore: match.score,
+                        matchQuality: match.quality,
+                        strengths: match.strengths,
+                        weaknesses: match.weaknesses,
+                      }}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/25 transition-all"
+                    >
+                      <Send className="w-3.5 h-3.5" />
+                      <span>Express Interest</span>
+                    </Link>
+                  </div>
                 </div>
               );
             })}

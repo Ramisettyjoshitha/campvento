@@ -16,10 +16,13 @@ import { SponsorshipPackagesPage } from './pages/SponsorshipPackagesPage';
 import { CreateSponsorshipPackagePage } from './pages/CreateSponsorshipPackagePage';
 import { EditSponsorshipPackagePage } from './pages/EditSponsorshipPackagePage';
 import { EventSponsorMatchesPage } from './pages/EventSponsorMatchesPage';
+import { OrganizerRequestsPage } from './pages/OrganizerRequestsPage';
 import { SponsorDashboard } from './pages/SponsorDashboard';
 import { SponsorProfilePage } from './pages/SponsorProfilePage';
 import { SponsorDiscoveryPage } from './pages/SponsorDiscoveryPage';
 import { SponsorMatchesPage } from './pages/SponsorMatchesPage';
+import { CreateSponsorshipRequestPage } from './pages/CreateSponsorshipRequestPage';
+import { SponsorRequestsPage } from './pages/SponsorRequestsPage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
 
@@ -157,7 +160,25 @@ export const App: React.FC = () => {
               }
             />
 
-            {/* Sponsor Role-Protected Routes (Step 5 & Step 6) */}
+            {/* Organizer Sponsorship Requests (Step 7) */}
+            <Route
+              path="/organizer/requests"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <OrganizerRequestsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/organizer/requests"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <OrganizerRequestsPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Sponsor Role-Protected Routes (Step 5, Step 6, Step 7) */}
             <Route
               path="/dashboard/sponsor"
               element={
@@ -213,6 +234,32 @@ export const App: React.FC = () => {
               element={
                 <ProtectedRoute allowedRoles={['SPONSOR']}>
                   <SponsorMatchesPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Sponsor Request Routes (Step 7) */}
+            <Route
+              path="/sponsor/request/:packageId"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <CreateSponsorshipRequestPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/sponsor/requests"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <SponsorRequestsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/sponsor/requests"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <SponsorRequestsPage />
                 </ProtectedRoute>
               }
             />

@@ -20,6 +20,7 @@ import {
   RefreshCw,
   X,
   ArrowRight,
+  Send,
 } from 'lucide-react';
 
 export const SponsorDiscoveryPage: React.FC = () => {
@@ -475,8 +476,18 @@ export const SponsorDiscoveryPage: React.FC = () => {
                               )}
                             </div>
 
-                            <div className="mt-5 pt-3 border-t border-slate-900/80 text-[11px] text-slate-500 text-center">
-                              Active Tier • Eligible for Discovery
+                            <div className="mt-5 pt-3 border-t border-slate-900/80 flex items-center justify-between gap-2">
+                              <span className="text-[10px] text-slate-500">
+                                Active Tier
+                              </span>
+
+                              <Link
+                                to={`/sponsor/request/${pkg.id}`}
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm shadow-blue-600/20 transition-all"
+                              >
+                                <Send className="w-3 h-3" />
+                                <span>Express Interest</span>
+                              </Link>
                             </div>
                           </div>
                         ))}
