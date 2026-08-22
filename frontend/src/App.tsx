@@ -8,6 +8,7 @@ import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { OrganizerDashboard } from './pages/OrganizerDashboard';
+import { OrganizerProfilePage } from './pages/OrganizerProfilePage';
 import { SponsorDashboard } from './pages/SponsorDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
@@ -50,7 +51,7 @@ export const App: React.FC = () => {
             {/* Dashboard Resolving Route */}
             <Route path="/dashboard" element={<DashboardRedirector />} />
 
-            {/* Role-Protected Routes */}
+            {/* Organizer Role-Protected Routes */}
             <Route
               path="/dashboard/organizer"
               element={
@@ -59,7 +60,24 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/organizer/profile"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <OrganizerProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/organizer/profile"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <OrganizerProfilePage />
+                </ProtectedRoute>
+              }
+            />
 
+            {/* Sponsor Role-Protected Routes */}
             <Route
               path="/dashboard/sponsor"
               element={
@@ -69,6 +87,7 @@ export const App: React.FC = () => {
               }
             />
 
+            {/* Admin Role-Protected Routes */}
             <Route
               path="/dashboard/admin"
               element={
