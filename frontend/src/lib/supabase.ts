@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import type { User } from '@supabase/supabase-js';
 
 const rawUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const publishableKey = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
@@ -23,11 +24,55 @@ export const supabase = createClient(
   publishableKey || 'placeholder-key',
   {
     auth: {
-      persistSession: false,
-      autoRefreshToken: false,
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
     },
   }
 );
+
+export type UserRole = 'ORGANIZER' | 'SPONSOR' | 'ADMIN';
+export type PublicUserRole = 'ORGANIZER' | 'SPONSOR';
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  fullName: string;
+  role: UserRole;
+  createdAt?: string;
+}
+
+/**
+ * Safely extracts and validates the user role from authenticated Supabase user metadata.
+ * Prioritizes app_metadata, falls back to user_metadata, and defaults to 'ORGANIZER'.
+ */
+export const extractUserRole = (user: User | null): UserRole => {
+  if (!user) return 'ORGANIZER';
+
+  // Check app_metadata first (server/admin managed), then user_metadata
+  const rawRole =
+    (user.app_metadata?.role as string) ||
+    (user.user_metadata?.role as string) ||
+    'ORGANIZER';
+
+  const normalized = rawRole.toUpperCase();
+  if (normalized === 'ADMIN') return 'ADMIN';
+  if (normalized === 'SPONSOR') return 'SPONSOR';
+  return 'ORGANIZER';
+};
+
+/**
+ * Extracts the user's full name from metadata.
+ */
+export const extractFullName = (user: User | null): string => {
+  if (!user) return '';
+  return (
+    (user.user_metadata?.full_name as string) ||
+    (user.user_metadata?.name as string) ||
+    user.email?.split('@')[0] ||
+    'User'
+  );
+};
 
 export interface SupabaseStatus {
   initialized: boolean;
@@ -49,29 +94,20 @@ export const checkSupabaseConnection = async (): Promise<SupabaseStatus> => {
   }
 
   try {
-    // Ping Supabase public health / auth to ensure project URL is reachable
-    const response = await fetch(`${supabaseUrl}/auth/v1/health`, {
-      method: 'GET',
-      headers: {
-        apikey: publishableKey,
-      },
-    });
-
-    if (response.ok) {
+    const { error } = await supabase.auth.getSession();
+    if (error) {
       return {
         initialized: true,
         configured: true,
-        message: 'Connected to Supabase project',
-      };
-    } else {
-      return {
-        initialized: true,
-        configured: true,
-        message: `Supabase reachable (HTTP ${response.status})`,
+        message: `Client ready (${error.message})`,
       };
     }
+    return {
+      initialized: true,
+      configured: true,
+      message: 'Connected to Supabase Auth',
+    };
   } catch {
-    // If auth health endpoint is blocked or unreachable via CORS, verify client instantiation
     return {
       initialized: true,
       configured: true,
