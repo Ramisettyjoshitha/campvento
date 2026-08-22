@@ -1,11 +1,22 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, LayoutDashboard, UserCircle, LogIn, UserPlus } from 'lucide-react';
+import {
+  LogOut,
+  LayoutDashboard,
+  UserCircle,
+  LogIn,
+  UserPlus,
+  Compass,
+  Calendar,
+  Building2,
+  GraduationCap,
+} from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const { user, role, fullName, signOut, getDashboardPath } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSignOut = async () => {
     await signOut();
@@ -24,18 +35,107 @@ export const Navbar: React.FC = () => {
     }
   };
 
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <header className="border-b border-slate-800/80 backdrop-blur-md sticky top-0 z-50 bg-slate-950/80">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
-            C
-          </div>
-          <span className="font-bold tracking-wider text-xl bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-            CAMPVENTO
-          </span>
-        </Link>
+    <header className="border-b border-slate-800/80 backdrop-blur-md sticky top-0 z-50 bg-slate-950/85">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        {/* Brand Logo & Contextual Links */}
+        <div className="flex items-center gap-6">
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+              C
+            </div>
+            <span className="font-bold tracking-wider text-xl bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+              CAMPVENTO
+            </span>
+          </Link>
+
+          {/* Navigation Links for Authenticated Users */}
+          {user && (
+            <nav className="hidden md:flex items-center gap-1">
+              {role === 'SPONSOR' && (
+                <>
+                  <Link
+                    to="/dashboard/sponsor"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/dashboard/sponsor')
+                        ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <LayoutDashboard className="w-3.5 h-3.5" />
+                    <span>Dashboard</span>
+                  </Link>
+
+                  <Link
+                    to="/sponsor/profile"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/sponsor/profile')
+                        ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <Building2 className="w-3.5 h-3.5" />
+                    <span>Profile</span>
+                  </Link>
+
+                  <Link
+                    to="/sponsor/discover"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/sponsor/discover')
+                        ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <Compass className="w-3.5 h-3.5" />
+                    <span>Discover Opportunities</span>
+                  </Link>
+                </>
+              )}
+
+              {role === 'ORGANIZER' && (
+                <>
+                  <Link
+                    to="/dashboard/organizer"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/dashboard/organizer')
+                        ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <LayoutDashboard className="w-3.5 h-3.5" />
+                    <span>Dashboard</span>
+                  </Link>
+
+                  <Link
+                    to="/organizer/profile"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/organizer/profile')
+                        ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <GraduationCap className="w-3.5 h-3.5" />
+                    <span>Profile</span>
+                  </Link>
+
+                  <Link
+                    to="/organizer/events"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/organizer/events')
+                        ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>Events</span>
+                  </Link>
+                </>
+              )}
+            </nav>
+          )}
+        </div>
 
         {/* Right Navigation */}
         <div className="flex items-center gap-3">
@@ -51,15 +151,15 @@ export const Navbar: React.FC = () => {
               </span>
 
               {/* User Name */}
-              <span className="hidden md:flex items-center gap-1.5 text-xs text-slate-300 font-medium">
+              <span className="hidden lg:flex items-center gap-1.5 text-xs text-slate-300 font-medium">
                 <UserCircle className="w-4 h-4 text-slate-400" />
                 {fullName || user.email}
               </span>
 
-              {/* Dashboard Link */}
+              {/* Mobile Dashboard Link (fallback for small screens) */}
               <Link
                 to={getDashboardPath(role)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-colors shadow-sm shadow-indigo-600/30"
+                className="md:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-colors shadow-sm shadow-indigo-600/30"
               >
                 <LayoutDashboard className="w-3.5 h-3.5" />
                 <span>Dashboard</span>

@@ -16,6 +16,8 @@ import { SponsorshipPackagesPage } from './pages/SponsorshipPackagesPage';
 import { CreateSponsorshipPackagePage } from './pages/CreateSponsorshipPackagePage';
 import { EditSponsorshipPackagePage } from './pages/EditSponsorshipPackagePage';
 import { SponsorDashboard } from './pages/SponsorDashboard';
+import { SponsorProfilePage } from './pages/SponsorProfilePage';
+import { SponsorDiscoveryPage } from './pages/SponsorDiscoveryPage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
 
@@ -143,12 +145,44 @@ export const App: React.FC = () => {
               }
             />
 
-            {/* Sponsor Role-Protected Routes */}
+            {/* Sponsor Role-Protected Routes (Step 5) */}
             <Route
               path="/dashboard/sponsor"
               element={
                 <ProtectedRoute allowedRoles={['SPONSOR']}>
                   <SponsorDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/sponsor/profile"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <SponsorProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/sponsor/profile"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <SponsorProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/sponsor/discover"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <SponsorDiscoveryPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/sponsor/discover"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <SponsorDiscoveryPage />
                 </ProtectedRoute>
               }
             />
