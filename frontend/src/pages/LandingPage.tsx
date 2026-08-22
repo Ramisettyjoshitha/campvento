@@ -112,6 +112,49 @@ export const LandingPage: React.FC = () => {
             )}
           </div>
 
+          {/* Platform Capabilities Overview */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto text-left mt-12 mb-12">
+            <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
+                01
+              </div>
+              <h3 className="text-sm font-bold text-white">Event & Package Hub</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Organizers publish campus hackathons and festivals with custom sponsorship tiers and reach metrics.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs">
+                02
+              </div>
+              <h3 className="text-sm font-bold text-white">AI Compatibility Engine</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Deterministic matching based on industry alignment, budget ranges, audience profiles, and locations.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-xs">
+                03
+              </div>
+              <h3 className="text-sm font-bold text-white">Requests & Commitments</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Structured workflow from sponsor expression of interest to organizer acceptance and active agreements.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <div className="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center font-bold text-xs">
+                04
+              </div>
+              <h3 className="text-sm font-bold text-white">Impact & Activity Analytics</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Conversion pipeline visualization, category distributions, and committed sponsorship values.
+              </p>
+            </div>
+          </div>
+
           {/* Service Status Dashboard */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left">
             {/* Frontend Status Card */}
@@ -179,13 +222,14 @@ export const LandingPage: React.FC = () => {
           <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-indigo-400" />
-              <span>Supabase Auth Session Persistence</span>
+              <span>Row Level Security (RLS) Enforced</span>
             </div>
             <div className="flex items-center gap-1.5">
               <ArrowRight className="w-4 h-4 text-indigo-400" />
               <span>Role-Based Access Control</span>
             </div>
           </div>
+
         </div>
       </main>
 
