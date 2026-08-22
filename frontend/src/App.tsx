@@ -23,6 +23,10 @@ import { SponsorDiscoveryPage } from './pages/SponsorDiscoveryPage';
 import { SponsorMatchesPage } from './pages/SponsorMatchesPage';
 import { CreateSponsorshipRequestPage } from './pages/CreateSponsorshipRequestPage';
 import { SponsorRequestsPage } from './pages/SponsorRequestsPage';
+import { CreateCommitmentPage } from './pages/CreateCommitmentPage';
+import { OrganizerCommitmentsPage } from './pages/OrganizerCommitmentsPage';
+import { SponsorCommitmentsPage } from './pages/SponsorCommitmentsPage';
+import { CommitmentDetailsPage } from './pages/CommitmentDetailsPage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
 
@@ -178,6 +182,40 @@ export const App: React.FC = () => {
               }
             />
 
+            {/* Organizer Sponsorship Commitments (Step 8) */}
+            <Route
+              path="/organizer/requests/:requestId/commitment"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <CreateCommitmentPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/organizer/commitments"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <OrganizerCommitmentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/organizer/commitments"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <OrganizerCommitmentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/organizer/commitments/:id"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <CommitmentDetailsPage />
+                </ProtectedRoute>
+              }
+            />
+
             {/* Sponsor Role-Protected Routes (Step 5, Step 6, Step 7) */}
             <Route
               path="/dashboard/sponsor"
@@ -260,6 +298,32 @@ export const App: React.FC = () => {
               element={
                 <ProtectedRoute allowedRoles={['SPONSOR']}>
                   <SponsorRequestsPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Sponsor Commitments Routes (Step 8) */}
+            <Route
+              path="/sponsor/commitments"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <SponsorCommitmentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/sponsor/commitments"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <SponsorCommitmentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/sponsor/commitments/:id"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <CommitmentDetailsPage />
                 </ProtectedRoute>
               }
             />

@@ -14,6 +14,7 @@ import {
   Sparkles,
   Send,
   Inbox,
+  FileText,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -118,6 +119,18 @@ export const Navbar: React.FC = () => {
                     <Send className="w-3.5 h-3.5 text-indigo-400" />
                     <span>My Requests</span>
                   </Link>
+
+                  <Link
+                    to="/sponsor/commitments"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/sponsor/commitments')
+                        ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>Commitments</span>
+                  </Link>
                 </>
               )}
 
@@ -169,6 +182,18 @@ export const Navbar: React.FC = () => {
                   >
                     <Inbox className="w-3.5 h-3.5 text-emerald-400" />
                     <span>Requests</span>
+                  </Link>
+
+                  <Link
+                    to="/organizer/commitments"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/organizer/commitments')
+                        ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>Commitments</span>
                   </Link>
                 </>
               )}

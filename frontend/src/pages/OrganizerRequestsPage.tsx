@@ -10,6 +10,7 @@ import type {
   SponsorshipRequestStatus,
   RequestSummaryStats,
 } from '../lib/sponsorshipRequests';
+import { checkExistingCommitment } from '../lib/sponsorshipCommitments';
 import {
   Inbox,
   Calendar,
@@ -24,6 +25,8 @@ import {
   HelpCircle,
   Check,
   X,
+  FileText,
+  ArrowRight,
 } from 'lucide-react';
 
 export const OrganizerRequestsPage: React.FC = () => {
@@ -38,6 +41,8 @@ export const OrganizerRequestsPage: React.FC = () => {
     packageName?: string;
   } | null>(null);
   const [updating, setUpdating] = useState<boolean>(false);
+  // Map of requestId -> commitmentId for ACCEPTED requests
+  const [commitmentMap, setCommitmentMap] = useState<Record<string, string>>({});
   const [successToast, setSuccessToast] = useState<string | null>(null);
 
   const loadRequests = async () => {
@@ -48,6 +53,16 @@ export const OrganizerRequestsPage: React.FC = () => {
       setError(res.error);
     } else if (res.data) {
       setRequests(res.data);
+      // For each ACCEPTED request, check if a commitment exists
+      const accepted = res.data.filter((r) => r.status === 'ACCEPTED');
+      const map: Record<string, string> = {};
+      await Promise.all(
+        accepted.map(async (r) => {
+          const { commitment } = await checkExistingCommitment(r.id);
+          if (commitment) map[r.id] = commitment.id;
+        })
+      );
+      setCommitmentMap(map);
     }
     setLoading(false);
   };
@@ -405,6 +420,35 @@ export const OrganizerRequestsPage: React.FC = () => {
                       <span>Accept Interest</span>
                     </button>
                   </div>
+                </div>
+              )}
+
+              {/* Step 8: Commitment actions for ACCEPTED requests */}
+              {req.status === 'ACCEPTED' && (
+                <div className="pt-3 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <span className="text-[11px] text-emerald-400/80 font-medium flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    Request accepted — manage sponsorship commitment:
+                  </span>
+                  {commitmentMap[req.id] ? (
+                    <Link
+                      to={`/organizer/commitments/${commitmentMap[req.id]}`}
+                      className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/25 transition-all"
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>View Commitment</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  ) : (
+                    <Link
+                      to={`/organizer/requests/${req.id}/commitment`}
+                      className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/25 transition-all"
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>Create Commitment</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  )}
                 </div>
               )}
             </div>

@@ -12,6 +12,11 @@ import {
 } from '../lib/sponsorshipRequests';
 import type { RequestSummaryStats } from '../lib/sponsorshipRequests';
 import {
+  getOrganizerCommitments,
+  calculateCommitmentSummary,
+} from '../lib/sponsorshipCommitments';
+import type { CommitmentSummaryStats } from '../lib/sponsorshipCommitments';
+import {
   GraduationCap,
   ShieldCheck,
   LogOut,
@@ -29,6 +34,7 @@ import {
   Sparkles,
   Inbox,
   XCircle,
+  FileText,
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -46,6 +52,13 @@ export const OrganizerDashboard: React.FC = () => {
     accepted: 0,
     rejected: 0,
     cancelled: 0,
+  });
+  const [commitmentSummary, setCommitmentSummary] = useState<CommitmentSummaryStats>({
+    total: 0,
+    active: 0,
+    completed: 0,
+    cancelled: 0,
+    totalValue: 0,
   });
 
   useEffect(() => {
@@ -78,6 +91,12 @@ export const OrganizerDashboard: React.FC = () => {
       const reqRes = await getOrganizerRequests();
       if (reqRes.data) {
         setRequestSummary(calculateRequestSummary(reqRes.data));
+      }
+
+      // Load commitments (Step 8)
+      const commitRes = await getOrganizerCommitments();
+      if (commitRes.data) {
+        setCommitmentSummary(calculateCommitmentSummary(commitRes.data));
       }
     };
 
@@ -430,6 +449,75 @@ export const OrganizerDashboard: React.FC = () => {
               {requestSummary.rejected + requestSummary.cancelled}
             </div>
             <p className="text-[11px] text-slate-500 mt-1">Closed proposals</p>
+          </div>
+        </div>
+      </div>
+
+      {/* STEP 8: SPONSORSHIP COMMITMENT MANAGEMENT SECTION */}
+      <div className="bg-gradient-to-r from-blue-950/40 via-slate-900 to-slate-950 border border-blue-500/30 rounded-2xl p-6 shadow-xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-800">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300 border border-blue-500/40 flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5" />
+                COMMITMENTS
+              </span>
+              <span className="text-xs text-slate-400">Step 8</span>
+            </div>
+            <h2 className="text-lg font-bold text-white tracking-tight">
+              Sponsorship Commitments
+            </h2>
+            <p className="text-xs text-slate-400 mt-1">
+              Track active, completed, and agreed sponsorship commitments created from accepted requests.
+            </p>
+          </div>
+
+          <Link
+            to="/organizer/commitments"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white transition-colors shadow-lg shadow-blue-600/20"
+          >
+            <FileText className="w-4 h-4" />
+            <span>Manage Commitments ({commitmentSummary.active} active)</span>
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs font-medium">
+              <span>Total Commitments</span>
+              <FileText className="w-3.5 h-3.5 text-blue-400" />
+            </div>
+            <div className="text-2xl font-bold text-white">{commitmentSummary.total}</div>
+            <p className="text-[11px] text-slate-500 mt-1">Structured agreements</p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs font-medium">
+              <span>Active</span>
+              <Clock className="w-3.5 h-3.5 text-emerald-400" />
+            </div>
+            <div className="text-2xl font-bold text-emerald-400">{commitmentSummary.active}</div>
+            <p className="text-[11px] text-slate-500 mt-1">In fulfillment</p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs font-medium">
+              <span>Completed</span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
+            </div>
+            <div className="text-2xl font-bold text-blue-400">{commitmentSummary.completed}</div>
+            <p className="text-[11px] text-slate-500 mt-1">Fulfilled partnerships</p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs font-medium">
+              <span>Total Committed Value</span>
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            </div>
+            <div className="text-2xl font-bold text-emerald-400">
+              ${commitmentSummary.totalValue.toLocaleString()}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Agreed amount sum</p>
           </div>
         </div>
       </div>
