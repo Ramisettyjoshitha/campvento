@@ -9,6 +9,9 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { OrganizerDashboard } from './pages/OrganizerDashboard';
 import { OrganizerProfilePage } from './pages/OrganizerProfilePage';
+import { CreateEventPage } from './pages/CreateEventPage';
+import { MyEventsPage } from './pages/MyEventsPage';
+import { EditEventPage } from './pages/EditEventPage';
 import { SponsorDashboard } from './pages/SponsorDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
@@ -73,6 +76,40 @@ export const App: React.FC = () => {
               element={
                 <ProtectedRoute allowedRoles={['ORGANIZER']}>
                   <OrganizerProfilePage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Organizer Event Management Routes (Step 4.2) */}
+            <Route
+              path="/organizer/events"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <MyEventsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/organizer/events"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <MyEventsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/organizer/events/new"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <CreateEventPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/organizer/events/:id/edit"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <EditEventPage />
                 </ProtectedRoute>
               }
             />

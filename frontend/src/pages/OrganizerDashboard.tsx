@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getOrganizerProfile } from '../lib/organizerProfile';
 import type { OrganizerProfile } from '../lib/organizerProfile';
+import { getMyEvents } from '../lib/events';
+import type { EventItem } from '../lib/events';
 import {
   GraduationCap,
   ShieldCheck,
@@ -10,6 +12,12 @@ import {
   Building2,
   ArrowRight,
   Clock,
+  Calendar,
+  CalendarPlus,
+  Layers,
+  CheckCircle2,
+  FileEdit,
+  ExternalLink,
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -17,16 +25,29 @@ export const OrganizerDashboard: React.FC = () => {
   const { user, fullName, role, signOut } = useAuth();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<OrganizerProfile | null>(null);
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [loadingEvents, setLoadingEvents] = useState<boolean>(true);
 
   useEffect(() => {
-    const loadProfile = async () => {
+    const loadData = async () => {
       if (!user) return;
-      const { data } = await getOrganizerProfile(user.id);
-      if (data) {
-        setProfile(data);
+
+      // Load profile
+      const { data: profileData } = await getOrganizerProfile(user.id);
+      if (profileData) {
+        setProfile(profileData);
       }
+
+      // Load events
+      setLoadingEvents(true);
+      const { data: eventList } = await getMyEvents();
+      if (eventList) {
+        setEvents(eventList);
+      }
+      setLoadingEvents(false);
     };
-    loadProfile();
+
+    loadData();
   }, [user]);
 
   const handleSignOut = async () => {
@@ -34,10 +55,16 @@ export const OrganizerDashboard: React.FC = () => {
     navigate('/');
   };
 
+  // Event statistics
+  const totalEvents = events.length;
+  const draftEvents = events.filter((e) => e.status === 'DRAFT').length;
+  const publishedEvents = events.filter((e) => e.status === 'PUBLISHED').length;
+  const completedEvents = events.filter((e) => e.status === 'COMPLETED').length;
+
   return (
-    <div className="flex-1 max-w-5xl mx-auto px-6 py-12 w-full">
+    <div className="flex-1 max-w-6xl mx-auto px-6 py-12 w-full space-y-8">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-emerald-950/60 to-slate-900 border border-emerald-500/30 rounded-2xl p-8 shadow-xl mb-8">
+      <div className="bg-gradient-to-r from-emerald-950/60 to-slate-900 border border-emerald-500/30 rounded-2xl p-8 shadow-xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
@@ -71,9 +98,9 @@ export const OrganizerDashboard: React.FC = () => {
           <div className="flex items-center gap-3">
             <Link
               to="/organizer/profile"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-colors shadow-lg shadow-emerald-600/20"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition-colors border border-slate-700/60"
             >
-              <User className="w-4 h-4" />
+              <User className="w-4 h-4 text-slate-400" />
               <span>Edit Profile</span>
             </Link>
             <button
@@ -87,7 +114,109 @@ export const OrganizerDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Grid */}
+      {/* EVENT MANAGEMENT SECTION (STEP 4.2) */}
+      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-800">
+          <div>
+            <div className="flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-emerald-400" />
+              <h2 className="text-lg font-bold text-white tracking-tight">Event Management</h2>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                Step 4.2
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              Create and manage upcoming campus events, track publication statuses, and view timelines.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link
+              to="/organizer/events"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition-colors border border-slate-700/60"
+            >
+              <Layers className="w-4 h-4 text-emerald-400" />
+              <span>My Events</span>
+            </Link>
+            <Link
+              to="/organizer/events/new"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-colors shadow-lg shadow-emerald-600/20"
+            >
+              <CalendarPlus className="w-4 h-4" />
+              <span>Create Event</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* 4 Event Metrics Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {/* Total Events */}
+          <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-slate-400 font-medium">Total Events</span>
+              <Layers className="w-4 h-4 text-slate-400" />
+            </div>
+            <div className="text-2xl font-bold text-white">
+              {loadingEvents ? '—' : totalEvents}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">All registered campus events</p>
+          </div>
+
+          {/* Draft Events */}
+          <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-slate-400 font-medium">Draft Events</span>
+              <FileEdit className="w-4 h-4 text-amber-400" />
+            </div>
+            <div className="text-2xl font-bold text-amber-400">
+              {loadingEvents ? '—' : draftEvents}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">In progress & unpublished</p>
+          </div>
+
+          {/* Published Events */}
+          <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-slate-400 font-medium">Published Events</span>
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            </div>
+            <div className="text-2xl font-bold text-emerald-400">
+              {loadingEvents ? '—' : publishedEvents}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Active for sponsorship</p>
+          </div>
+
+          {/* Completed Events */}
+          <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-slate-400 font-medium">Completed</span>
+              <Clock className="w-4 h-4 text-blue-400" />
+            </div>
+            <div className="text-2xl font-bold text-blue-400">
+              {loadingEvents ? '—' : completedEvents}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Concluded events</p>
+          </div>
+        </div>
+
+        {/* Quick Events Snippet */}
+        <div className="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
+          <span className="text-slate-400">
+            {events.length === 0
+              ? 'No campus events created yet.'
+              : `You have ${events.length} event(s) in your organizer portfolio.`}
+          </span>
+          <Link
+            to="/organizer/events"
+            className="text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1"
+          >
+            <span>View All in My Events</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Main Grid: Profile & Auth */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Profile Summary Card */}
         <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
@@ -164,13 +293,13 @@ export const OrganizerDashboard: React.FC = () => {
               </div>
               <div className="flex justify-between py-1.5">
                 <span className="text-slate-400">Row Level Security</span>
-                <span className="text-emerald-400 font-medium">Active (auth.uid = user_id)</span>
+                <span className="text-emerald-400 font-medium">Active (auth.uid = organizer_id)</span>
               </div>
             </div>
           </div>
 
           <div className="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500">
-            Step 4.1: Organizer profile database module active.
+            Step 4.2: Event creation & organizer event management active.
           </div>
         </div>
       </div>
