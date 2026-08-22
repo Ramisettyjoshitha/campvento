@@ -15,9 +15,11 @@ import { EditEventPage } from './pages/EditEventPage';
 import { SponsorshipPackagesPage } from './pages/SponsorshipPackagesPage';
 import { CreateSponsorshipPackagePage } from './pages/CreateSponsorshipPackagePage';
 import { EditSponsorshipPackagePage } from './pages/EditSponsorshipPackagePage';
+import { EventSponsorMatchesPage } from './pages/EventSponsorMatchesPage';
 import { SponsorDashboard } from './pages/SponsorDashboard';
 import { SponsorProfilePage } from './pages/SponsorProfilePage';
 import { SponsorDiscoveryPage } from './pages/SponsorDiscoveryPage';
+import { SponsorMatchesPage } from './pages/SponsorMatchesPage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
 
@@ -145,7 +147,17 @@ export const App: React.FC = () => {
               }
             />
 
-            {/* Sponsor Role-Protected Routes (Step 5) */}
+            {/* Organizer Event Sponsor Compatibility View (Step 6) */}
+            <Route
+              path="/organizer/events/:eventId/matches"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <EventSponsorMatchesPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Sponsor Role-Protected Routes (Step 5 & Step 6) */}
             <Route
               path="/dashboard/sponsor"
               element={
@@ -183,6 +195,24 @@ export const App: React.FC = () => {
               element={
                 <ProtectedRoute allowedRoles={['SPONSOR']}>
                   <SponsorDiscoveryPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Sponsor AI Matches Hub (Step 6) */}
+            <Route
+              path="/sponsor/matches"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <SponsorMatchesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/sponsor/matches"
+              element={
+                <ProtectedRoute allowedRoles={['SPONSOR']}>
+                  <SponsorMatchesPage />
                 </ProtectedRoute>
               }
             />

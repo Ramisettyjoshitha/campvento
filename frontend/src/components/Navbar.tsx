@@ -11,6 +11,7 @@ import {
   Calendar,
   Building2,
   GraduationCap,
+  Sparkles,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -90,6 +91,18 @@ export const Navbar: React.FC = () => {
                   >
                     <Compass className="w-3.5 h-3.5" />
                     <span>Discover Opportunities</span>
+                  </Link>
+
+                  <Link
+                    to="/sponsor/matches"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                      isActive('/sponsor/matches')
+                        ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    }`}
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>AI Matches</span>
                   </Link>
                 </>
               )}

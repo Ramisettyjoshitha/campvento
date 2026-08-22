@@ -21,6 +21,7 @@ import {
   FileEdit,
   ExternalLink,
   Package,
+  Sparkles,
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -301,6 +302,49 @@ export const OrganizerDashboard: React.FC = () => {
             : `${packages.length} package(s) defined across your events.`}
         </div>
       </div>
+
+      {/* SPONSOR MATCH INTELLIGENCE SECTION (STEP 6) */}
+      <div className="bg-gradient-to-r from-slate-900/90 to-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-800">
+          <div>
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-indigo-400" />
+              <h2 className="text-lg font-bold text-white tracking-tight">Sponsor Match Intelligence</h2>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-500/15 text-indigo-400 border border-indigo-500/30">
+                Step 6
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              CAMPVENTO multi-factor AI matching evaluates your published campus events against active sponsor brand preferences.
+            </p>
+          </div>
+
+          <Link
+            to="/organizer/events"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-colors shadow-lg shadow-indigo-600/20"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>View Event Match Status</span>
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <span className="text-slate-400 font-semibold block mb-1">Explainable Matching Active</span>
+            <p className="text-slate-400 leading-relaxed text-[11px]">
+              Sponsors discovering your events receive deterministic scores across industry alignment, category overlap, budget ranges, target audience demographics, venue locations, and expected reach.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80">
+            <span className="text-slate-400 font-semibold block mb-1">Privacy & Security Preserved</span>
+            <p className="text-slate-400 leading-relaxed text-[11px]">
+              Sponsor private contact profiles remain strictly protected under Row Level Security. Direct sponsor proposals and consented discovery will unlock in subsequent platform stages.
+            </p>
+          </div>
+        </div>
+      </div>
+
 
       {/* Main Grid: Profile & Auth */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

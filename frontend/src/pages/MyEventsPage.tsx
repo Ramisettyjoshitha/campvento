@@ -17,6 +17,7 @@ import {
   AlertCircle,
   Loader2,
   Layers,
+  Sparkles,
 } from 'lucide-react';
 
 export const MyEventsPage: React.FC = () => {
@@ -287,6 +288,15 @@ export const MyEventsPage: React.FC = () => {
                 >
                   <Package className="w-3.5 h-3.5" />
                   <span>Manage Sponsorship Packages</span>
+                </Link>
+
+                {/* Match Status Intelligence Button */}
+                <Link
+                  to={`/organizer/events/${event.id}/matches`}
+                  className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-300 hover:text-indigo-200 transition-colors border border-indigo-500/20"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>View Sponsor Compatibility</span>
                 </Link>
               </div>
             </div>

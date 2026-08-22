@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getSponsorProfile } from '../lib/sponsorProfile';
 import type { SponsorProfile } from '../lib/sponsorProfile';
+import { getSponsorMatches } from '../lib/matchingService';
+import type { MatchSummaryStats } from '../lib/matchingService';
 import {
   Building2,
   ShieldCheck,
@@ -14,6 +16,10 @@ import {
   Edit3,
   ArrowRight,
   Loader2,
+  Sparkles,
+  Award,
+  TrendingUp,
+  Zap,
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -23,19 +29,28 @@ export const SponsorDashboard: React.FC = () => {
 
   const [profile, setProfile] = useState<SponsorProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [matchSummary, setMatchSummary] = useState<MatchSummaryStats | null>(null);
 
   useEffect(() => {
-    const loadProfile = async () => {
+    const loadDashboardData = async () => {
       if (!user) return;
       setLoading(true);
+
       const { data } = await getSponsorProfile(user.id);
       if (data) {
         setProfile(data);
       }
+
+      // Fetch match stats
+      const matchRes = await getSponsorMatches();
+      if (matchRes.summary) {
+        setMatchSummary(matchRes.summary);
+      }
+
       setLoading(false);
     };
 
-    loadProfile();
+    loadDashboardData();
   }, [user]);
 
   const handleSignOut = async () => {
@@ -99,9 +114,9 @@ export const SponsorDashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 max-w-6xl mx-auto px-6 py-10 w-full">
+    <div className="flex-1 max-w-6xl mx-auto px-6 py-10 w-full space-y-8">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/40 border border-blue-500/30 rounded-3xl p-8 shadow-2xl mb-8">
+      <div className="bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/40 border border-blue-500/30 rounded-3xl p-8 shadow-2xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-2xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
@@ -125,11 +140,11 @@ export const SponsorDashboard: React.FC = () => {
 
           <div className="flex items-center gap-3">
             <Link
-              to="/sponsor/discover"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/25 transition-all"
+              to="/sponsor/matches"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/25 transition-all"
             >
-              <Compass className="w-4 h-4" />
-              <span>Discover Opportunities</span>
+              <Sparkles className="w-4 h-4" />
+              <span>AI Matches</span>
             </Link>
             <button
               onClick={handleSignOut}
@@ -142,8 +157,86 @@ export const SponsorDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Grid: Profile Summary & Action Shortcuts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      {/* AI Match Intelligence Banner Card */}
+      <div className="bg-gradient-to-r from-indigo-950/60 via-slate-900 to-blue-950/60 border border-indigo-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 mb-6 border-b border-slate-800">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5" />
+                AI MATCH OPPORTUNITIES
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                Live Scoring
+              </span>
+            </div>
+            <h2 className="text-xl font-bold text-white tracking-tight">
+              Campus Sponsorship Compatibility Intelligence
+            </h2>
+            <p className="text-xs text-slate-300 mt-1 max-w-2xl">
+              Multi-factor explainable matching evaluates active campus events against your brand profile, budget ceilings, audience demographics, and target locations.
+            </p>
+          </div>
+
+          <Link
+            to="/sponsor/matches"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs shadow-lg shadow-indigo-600/25 transition-all self-start lg:self-center"
+          >
+            <span>View AI Matches</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        {/* 4 Matching KPI Stats */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs">
+              <span>Total Opportunities</span>
+              <Zap className="w-3.5 h-3.5 text-blue-400" />
+            </div>
+            <div className="text-2xl font-black text-white">
+              {loading ? '—' : matchSummary?.totalOpportunities ?? 0}
+            </div>
+            <p className="text-[10px] text-slate-500 mt-0.5">Live campus tiers</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs">
+              <span>Best Match Score</span>
+              <Award className="w-3.5 h-3.5 text-indigo-400" />
+            </div>
+            <div className="text-2xl font-black text-indigo-400">
+              {loading ? '—' : `${matchSummary?.topScore ?? 0}%`}
+            </div>
+            <p className="text-[10px] text-slate-500 mt-0.5">Top compatibility</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs">
+              <span>Excellent Matches</span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+            </div>
+            <div className="text-2xl font-black text-emerald-400">
+              {loading ? '—' : matchSummary?.excellentMatches ?? 0}
+            </div>
+            <p className="text-[10px] text-slate-500 mt-0.5">90%+ match quality</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
+            <div className="flex items-center justify-between mb-1 text-slate-400 text-xs">
+              <span>Strong Matches</span>
+              <TrendingUp className="w-3.5 h-3.5 text-blue-400" />
+            </div>
+            <div className="text-2xl font-black text-blue-400">
+              {loading ? '—' : matchSummary?.strongMatches ?? 0}
+            </div>
+            <p className="text-[10px] text-slate-500 mt-0.5">75–89% match quality</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Grid: Profile Summary & Discovery Shortcut */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Sponsor Profile Summary Card */}
         <div className="lg:col-span-2 bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl flex flex-col justify-between">
           <div>
@@ -217,8 +310,8 @@ export const SponsorDashboard: React.FC = () => {
           <div className="mt-8 pt-4 border-t border-slate-800/80 flex items-center justify-between">
             <span className="text-xs text-slate-400">
               {completionPercentage < 100
-                ? 'Fill out all profile fields to optimize partner matching.'
-                : 'Your profile is fully configured and ready for campus discovery.'}
+                ? 'Fill out all profile fields to optimize AI matching quality.'
+                : 'Your profile is fully configured for campus matchmaking.'}
             </span>
             <Link
               to="/sponsor/profile"
@@ -262,7 +355,7 @@ export const SponsorDashboard: React.FC = () => {
             to="/sponsor/discover"
             className="mt-8 w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/25 transition-all"
           >
-            <span>Browse Opportunities</span>
+            <span>Browse Discovery Hub</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
