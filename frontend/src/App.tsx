@@ -12,6 +12,9 @@ import { OrganizerProfilePage } from './pages/OrganizerProfilePage';
 import { CreateEventPage } from './pages/CreateEventPage';
 import { MyEventsPage } from './pages/MyEventsPage';
 import { EditEventPage } from './pages/EditEventPage';
+import { SponsorshipPackagesPage } from './pages/SponsorshipPackagesPage';
+import { CreateSponsorshipPackagePage } from './pages/CreateSponsorshipPackagePage';
+import { EditSponsorshipPackagePage } from './pages/EditSponsorshipPackagePage';
 import { SponsorDashboard } from './pages/SponsorDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
@@ -110,6 +113,32 @@ export const App: React.FC = () => {
               element={
                 <ProtectedRoute allowedRoles={['ORGANIZER']}>
                   <EditEventPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Organizer Sponsorship Package Routes (Step 4.3) */}
+            <Route
+              path="/organizer/events/:eventId/packages"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <SponsorshipPackagesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/organizer/events/:eventId/packages/new"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <CreateSponsorshipPackagePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/organizer/events/:eventId/packages/:packageId/edit"
+              element={
+                <ProtectedRoute allowedRoles={['ORGANIZER']}>
+                  <EditSponsorshipPackagePage />
                 </ProtectedRoute>
               }
             />

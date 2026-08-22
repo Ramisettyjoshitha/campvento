@@ -13,6 +13,7 @@ import {
   Trash2,
   Clock,
   CheckCircle2,
+  Package,
   AlertCircle,
   Loader2,
   Layers,
@@ -260,22 +261,33 @@ export const MyEventsPage: React.FC = () => {
               </div>
 
               {/* Card Actions */}
-              <div className="pt-4 border-t border-slate-800 flex items-center justify-between gap-2">
-                <Link
-                  to={`/organizer/events/${event.id}/edit`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition-colors border border-slate-700/50"
-                >
-                  <Edit3 className="w-3.5 h-3.5" />
-                  <span>Edit Event</span>
-                </Link>
+              <div className="pt-4 border-t border-slate-800 flex flex-col gap-2">
+                <div className="flex items-center justify-between gap-2">
+                  <Link
+                    to={`/organizer/events/${event.id}/edit`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition-colors border border-slate-700/50"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                    <span>Edit Event</span>
+                  </Link>
 
-                <button
-                  onClick={() => setDeleteTargetId(event.id)}
-                  className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
-                  title="Delete Event"
+                  <button
+                    onClick={() => setDeleteTargetId(event.id)}
+                    className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                    title="Delete Event"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Sponsorship Packages Button */}
+                <Link
+                  to={`/organizer/events/${event.id}/packages`}
+                  className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-violet-600/15 hover:bg-violet-600/30 text-violet-300 hover:text-violet-200 transition-colors border border-violet-600/30"
                 >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                  <Package className="w-3.5 h-3.5" />
+                  <span>Manage Sponsorship Packages</span>
+                </Link>
               </div>
             </div>
           ))}

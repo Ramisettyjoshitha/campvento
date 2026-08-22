@@ -4,6 +4,8 @@ import { getOrganizerProfile } from '../lib/organizerProfile';
 import type { OrganizerProfile } from '../lib/organizerProfile';
 import { getMyEvents } from '../lib/events';
 import type { EventItem } from '../lib/events';
+import { getMyPackages } from '../lib/sponsorshipPackages';
+import type { SponsorshipPackage } from '../lib/sponsorshipPackages';
 import {
   GraduationCap,
   ShieldCheck,
@@ -18,6 +20,7 @@ import {
   CheckCircle2,
   FileEdit,
   ExternalLink,
+  Package,
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -27,6 +30,8 @@ export const OrganizerDashboard: React.FC = () => {
   const [profile, setProfile] = useState<OrganizerProfile | null>(null);
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loadingEvents, setLoadingEvents] = useState<boolean>(true);
+  const [packages, setPackages] = useState<SponsorshipPackage[]>([]);
+  const [loadingPackages, setLoadingPackages] = useState<boolean>(true);
 
   useEffect(() => {
     const loadData = async () => {
@@ -45,6 +50,14 @@ export const OrganizerDashboard: React.FC = () => {
         setEvents(eventList);
       }
       setLoadingEvents(false);
+
+      // Load sponsorship packages
+      setLoadingPackages(true);
+      const { data: pkgList } = await getMyPackages();
+      if (pkgList) {
+        setPackages(pkgList);
+      }
+      setLoadingPackages(false);
     };
 
     loadData();
@@ -60,6 +73,11 @@ export const OrganizerDashboard: React.FC = () => {
   const draftEvents = events.filter((e) => e.status === 'DRAFT').length;
   const publishedEvents = events.filter((e) => e.status === 'PUBLISHED').length;
   const completedEvents = events.filter((e) => e.status === 'COMPLETED').length;
+
+  // Sponsorship package statistics
+  const totalPackages = packages.length;
+  const activePackages = packages.filter((p) => p.status === 'ACTIVE').length;
+  const inactivePackages = packages.filter((p) => p.status === 'INACTIVE').length;
 
   return (
     <div className="flex-1 max-w-6xl mx-auto px-6 py-12 w-full space-y-8">
@@ -213,6 +231,74 @@ export const OrganizerDashboard: React.FC = () => {
             <span>View All in My Events</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </Link>
+        </div>
+      </div>
+
+      {/* SPONSORSHIP PACKAGES SECTION (STEP 4.3) */}
+      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-800">
+          <div>
+            <div className="flex items-center gap-2">
+              <Package className="w-5 h-5 text-violet-400" />
+              <h2 className="text-lg font-bold text-white tracking-tight">Sponsorship Packages</h2>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-violet-500/15 text-violet-400 border border-violet-500/30">
+                Step 4.3
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              Manage sponsorship tiers and pricing for your campus events.
+            </p>
+          </div>
+
+          <Link
+            to="/organizer/events"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-violet-600 hover:bg-violet-500 text-white transition-colors shadow-lg shadow-violet-600/20"
+          >
+            <Package className="w-4 h-4" />
+            <span>Manage Sponsorship Packages</span>
+          </Link>
+        </div>
+
+        {/* Package Metrics */}
+        <div className="grid grid-cols-3 gap-4">
+          <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-slate-400 font-medium">Total Packages</span>
+              <Package className="w-4 h-4 text-slate-400" />
+            </div>
+            <div className="text-2xl font-bold text-white">
+              {loadingPackages ? '—' : totalPackages}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">All sponsorship tiers</p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-slate-400 font-medium">Active Packages</span>
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            </div>
+            <div className="text-2xl font-bold text-emerald-400">
+              {loadingPackages ? '—' : activePackages}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Open to sponsors</p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-slate-400 font-medium">Inactive Packages</span>
+              <Layers className="w-4 h-4 text-slate-500" />
+            </div>
+            <div className="text-2xl font-bold text-slate-400">
+              {loadingPackages ? '—' : inactivePackages}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Hidden from sponsors</p>
+          </div>
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-slate-800/80 text-xs text-slate-400">
+          {packages.length === 0
+            ? 'No sponsorship packages created yet. Go to My Events → Manage Packages.'
+            : `${packages.length} package(s) defined across your events.`}
         </div>
       </div>
 
