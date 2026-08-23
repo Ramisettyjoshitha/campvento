@@ -1,61 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, CheckCircle2, Server, Database, ShieldCheck, ArrowRight, LogIn, UserPlus } from 'lucide-react';
-import { checkSupabaseConnection } from '../lib/supabase';
-import type { SupabaseStatus } from '../lib/supabase';
+import { Sparkles, ShieldCheck, ArrowRight, LogIn, UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-
-interface HealthStatus {
-  status: string;
-  service: string;
-}
 
 export const LandingPage: React.FC = () => {
   const { user, role, getDashboardPath } = useAuth();
-  const [health, setHealth] = useState<HealthStatus | null>(null);
-  const [loadingBackend, setLoadingBackend] = useState<boolean>(false);
-  const [backendError, setBackendError] = useState<string | null>(null);
-
-  const [supabaseStatus, setSupabaseStatus] = useState<SupabaseStatus | null>(null);
-  const [loadingSupabase, setLoadingSupabase] = useState<boolean>(false);
-
-  const checkBackendHealth = async () => {
-    setLoadingBackend(true);
-    setBackendError(null);
-    try {
-      const response = await fetch('http://127.0.0.1:8000/health');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = (await response.json()) as HealthStatus;
-      setHealth(data);
-    } catch (err) {
-      setBackendError(err instanceof Error ? err.message : 'Backend unreachable');
-    } finally {
-      setLoadingBackend(false);
-    }
-  };
-
-  const verifySupabase = async () => {
-    setLoadingSupabase(true);
-    try {
-      const status = await checkSupabaseConnection();
-      setSupabaseStatus(status);
-    } catch {
-      setSupabaseStatus({
-        initialized: false,
-        configured: false,
-        message: 'Supabase initialization failed',
-      });
-    } finally {
-      setLoadingSupabase(false);
-    }
-  };
-
-  useEffect(() => {
-    checkBackendHealth();
-    verifySupabase();
-  }, []);
 
   return (
     <div className="flex-1 flex flex-col justify-between relative overflow-hidden">
@@ -155,71 +104,8 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Service Status Dashboard */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left">
-            {/* Frontend Status Card */}
-            <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Frontend</span>
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              </div>
-              <p className="text-sm font-semibold text-white">React + Vite + TypeScript</p>
-              <p className="text-xs text-slate-400 mt-1">Tailwind CSS configured & active</p>
-            </div>
-
-            {/* Backend Status Card */}
-            <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Backend API</span>
-                <Server className={`w-4 h-4 ${health ? 'text-emerald-400' : 'text-amber-400'}`} />
-              </div>
-              <p className="text-sm font-semibold text-white">FastAPI (Python)</p>
-              <div className="mt-1 flex items-center justify-between">
-                <span className="text-xs text-slate-400">
-                  {loadingBackend
-                    ? 'Checking /health...'
-                    : health
-                    ? `Status: ${health.status} (${health.service})`
-                    : backendError
-                    ? 'Backend not connected'
-                    : 'Ready'}
-                </span>
-                <button
-                  onClick={checkBackendHealth}
-                  className="text-xs text-indigo-400 hover:text-indigo-300 underline font-medium"
-                >
-                  Retry
-                </button>
-              </div>
-            </div>
-
-            {/* Supabase Status Card */}
-            <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Supabase Auth</span>
-                <Database
-                  className={`w-4 h-4 ${supabaseStatus?.initialized ? 'text-emerald-400' : 'text-amber-400'}`}
-                />
-              </div>
-              <p className="text-sm font-semibold text-white">Auth & Session Ready</p>
-              <div className="mt-1 flex items-center justify-between">
-                <span className="text-xs text-slate-400">
-                  {loadingSupabase
-                    ? 'Verifying client...'
-                    : supabaseStatus?.message || 'Client ready'}
-                </span>
-                <button
-                  onClick={verifySupabase}
-                  className="text-xs text-indigo-400 hover:text-indigo-300 underline font-medium"
-                >
-                  Retry
-                </button>
-              </div>
-            </div>
-          </div>
-
           {/* Quick Info */}
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-indigo-400" />
               <span>Row Level Security (RLS) Enforced</span>
